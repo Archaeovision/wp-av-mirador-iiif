@@ -1,0 +1,15 @@
+.wp-av-mirador-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  color: #666;
+  font-style: italic;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 4px;
+  min-height: 300px;
+}

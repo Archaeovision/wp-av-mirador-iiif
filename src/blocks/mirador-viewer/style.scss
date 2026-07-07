@@ -1,0 +1,16 @@
+.wp-av-mirador-iiif-viewer {
+  width: 100%;
+  overflow: hidden;
+
+  &--standard {
+    .mirador-image {
+      border-radius: 4px;
+    }
+  }
+
+  &--compact {
+    .mirador-image {
+      border-radius: 2px;
+    }
+  }
+}

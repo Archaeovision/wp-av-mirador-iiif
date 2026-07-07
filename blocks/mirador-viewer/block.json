@@ -1,0 +1,54 @@
+{
+  "apiVersion": 3,
+  "name": "wp-av-mirador/iiif-viewer",
+  "title": "Mirador IIIF Viewer",
+  "category": "media",
+  "description": "Embed IIIF manifests using the Mirador viewer",
+  "example": {
+    "attributes": {
+      "manifestUrl": "https://uuringud.notke.eu/api/directus-manifest-dynamic/example"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "anchor": true,
+    "customClassName": true
+  },
+  "attributes": {
+    "manifestUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "width": {
+      "type": "string",
+      "default": "100%"
+    },
+    "height": {
+      "type": "string",
+      "default": "600px"
+    },
+    "appearance": {
+      "type": "string",
+      "default": "standard",
+      "enum": [
+        "standard",
+        "compact"
+      ]
+    },
+    "showZoomControls": {
+      "type": "boolean",
+      "default": true
+    },
+    "showFullscreenButton": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "textdomain": "wp-av-mirador-iiif",
+  "editorScript": "wp-av-mirador-iiif-block",
+  "style": "wp-av-mirador-iiif-styles"
+}

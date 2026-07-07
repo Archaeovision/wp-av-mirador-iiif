@@ -1,0 +1,16 @@
+# macOS AppleDouble resource-fork files (common on this external drive)
+._*
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# wp-scripts build output (root index.js/css/blocks are the tracked, built artifacts)
+build/
+
+# Packaged plugin zips
+*.zip
+
+# Playwright test artifacts
+test-results/
+playwright-report/

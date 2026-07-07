@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mirador standalone test fixture</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    #status { padding: 8px; background: #eee; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div id="status">loading...</div>
+  <div
+    class="wp-av-mirador-iiif-viewer"
+    data-manifest-url="https://uuringud.notke.eu/api/directus-manifest-dynamic/linnahall"
+    data-width="100%"
+    data-height="700px"
+  ></div>
+
+  <script src="../../node_modules/react/umd/react.development.js"></script>
+  <script src="../../node_modules/react-dom/umd/react-dom.development.js"></script>
+  <script>
+    // WordPress ships `wp-includes/js/dist/vendor/react-jsx-runtime.js` as the
+    // `window.ReactJSXRuntime` global consumed by the automatic JSX transform.
+    // Reimplement it (not a stub) on top of window.React so JSX actually works.
+    window.ReactJSXRuntime = {
+      jsx: (type, props, key) =>
+        window.React.createElement(type, key !== undefined ? { ...props, key } : props),
+      jsxs: (type, props, key) =>
+        window.React.createElement(type, key !== undefined ? { ...props, key } : props),
+      Fragment: window.React.Fragment,
+    };
+  </script>
+  <script>
+    // Standalone harness stand-in for the WordPress `wp` global (wp-blocks,
+    // wp-components, wp-block-editor, wp-i18n, ...). Real WordPress pages
+    // provide these; here we only need the frontend init path (MiradorWrapper)
+    // to run without the editor-side registerBlockType() call throwing.
+    function wpStub() {
+      return new Proxy(function () {}, {
+        get: (target, prop) => (prop === '__esModule' ? true : wpStub()),
+        apply: () => wpStub(),
+        construct: () => wpStub(),
+      });
+    }
+    window.wp = new Proxy({}, { get: () => wpStub() });
+  </script>
+  <script src="../../build/index.js"></script>
+  <script>
+    document.getElementById('status').textContent = 'scripts loaded, waiting for Mirador...';
+  </script>
+</body>
+</html>
