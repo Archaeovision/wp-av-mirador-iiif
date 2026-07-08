@@ -45,6 +45,22 @@
     }
     window.wp = new Proxy({}, { get: () => wpStub() });
   </script>
+  <script>
+    // Lets tests exercise non-default block settings against this one real
+    // fixture/manifest instead of duplicating fixture files. Query params
+    // are copied onto the container's data-* attributes before
+    // DOMContentLoaded fires (when build/index.js reads them). See
+    // tests/README.md for the supported param list.
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var el = document.querySelector('.wp-av-mirador-iiif-viewer');
+      ['fullscreen', 'sidebar', 'workspace-panel', 'manifest-link', 'appearance', 'zoom', 'accent-color'].forEach(function (key) {
+        if (params.has(key)) {
+          el.setAttribute('data-' + (key === 'zoom' ? 'zoom-controls' : key), params.get(key));
+        }
+      });
+    })();
+  </script>
   <script src="../../build/index.js"></script>
   <script>
     document.getElementById('status').textContent = 'scripts loaded, waiting for Mirador...';

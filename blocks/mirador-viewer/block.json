@@ -46,6 +46,22 @@
     "showFullscreenButton": {
       "type": "boolean",
       "default": true
+    },
+    "showSidebar": {
+      "type": "boolean",
+      "default": true
+    },
+    "showWorkspacePanel": {
+      "type": "boolean",
+      "default": true
+    },
+    "showManifestLink": {
+      "type": "boolean",
+      "default": true
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#1967d2"
     }
   },
   "textdomain": "wp-av-mirador-iiif",

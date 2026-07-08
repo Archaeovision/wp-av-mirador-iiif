@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls, PanelColorSettings } from '@wordpress/block-editor';
 import { PanelBody, TextControl, SelectControl, ToggleControl } from '@wordpress/components';
 import MiradorWrapper from '../../components/MiradorWrapper';
 import './editor.css';
 
 export default function Edit({ attributes, setAttributes }) {
-  const { manifestUrl, width, height, appearance, showZoomControls, showFullscreenButton } = attributes;
+  const { manifestUrl, width, height, appearance, showZoomControls, showFullscreenButton, showSidebar, showWorkspacePanel, showManifestLink, accentColor } = attributes;
   const blockProps = useBlockProps({ style: { width: width || '100%', height: height || '600px' } });
 
   return (
@@ -55,6 +55,17 @@ export default function Edit({ attributes, setAttributes }) {
           />
         </PanelBody>
 
+        <PanelColorSettings
+          title={__('Color', 'wp-av-mirador-iiif')}
+          colorSettings={[
+            {
+              value: accentColor,
+              onChange: (value) => setAttributes({ accentColor: value || '#1967d2' }),
+              label: __('Accent Color', 'wp-av-mirador-iiif'),
+            },
+          ]}
+        />
+
         <PanelBody title={__('Controls', 'wp-av-mirador-iiif')}>
           <ToggleControl
             label={__('Show Zoom Controls', 'wp-av-mirador-iiif')}
@@ -68,12 +79,41 @@ export default function Edit({ attributes, setAttributes }) {
             onChange={(value) => setAttributes({ showFullscreenButton: value })}
             __nextHasNoMarginBottom
           />
+          <ToggleControl
+            label={__('Show Sidebar', 'wp-av-mirador-iiif')}
+            checked={showSidebar}
+            onChange={(value) => setAttributes({ showSidebar: value })}
+            __nextHasNoMarginBottom
+          />
+          <ToggleControl
+            label={__('Show Workspace Panel', 'wp-av-mirador-iiif')}
+            checked={showWorkspacePanel}
+            onChange={(value) => setAttributes({ showWorkspacePanel: value })}
+            __nextHasNoMarginBottom
+          />
+          <ToggleControl
+            label={__('Show Manifest Link', 'wp-av-mirador-iiif')}
+            checked={showManifestLink}
+            onChange={(value) => setAttributes({ showManifestLink: value })}
+            __nextHasNoMarginBottom
+          />
         </PanelBody>
       </InspectorControls>
 
       <div {...blockProps}>
         {manifestUrl ? (
-          <MiradorWrapper manifestUrl={manifestUrl} width={width} height={height} appearance={appearance} showZoomControls={showZoomControls} showFullscreenButton={showFullscreenButton} />
+          <MiradorWrapper
+            manifestUrl={manifestUrl}
+            width={width}
+            height={height}
+            appearance={appearance}
+            showZoomControls={showZoomControls}
+            showFullscreenButton={showFullscreenButton}
+            showSidebar={showSidebar}
+            showWorkspacePanel={showWorkspacePanel}
+            showManifestLink={showManifestLink}
+            accentColor={accentColor}
+          />
         ) : (
           <div className="wp-av-mirador-placeholder">{__('Enter a manifest URL in the block settings', 'wp-av-mirador-iiif')}</div>
         )}

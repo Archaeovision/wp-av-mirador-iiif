@@ -8,7 +8,8 @@
     "start": "wp-scripts start",
     "dev": "wp-scripts build",
     "pretest:e2e": "npm run build",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "package": "bash bin/package.sh"
   },
   "keywords": [
     "wordpress",

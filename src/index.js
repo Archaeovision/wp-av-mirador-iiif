@@ -34,6 +34,10 @@ function initFrontend() {
     const appearance = container.getAttribute('data-appearance') || 'standard';
     const showZoomControls = container.getAttribute('data-zoom-controls') !== 'false';
     const showFullscreenButton = container.getAttribute('data-fullscreen') !== 'false';
+    const showSidebar = container.getAttribute('data-sidebar') !== 'false';
+    const showWorkspacePanel = container.getAttribute('data-workspace-panel') !== 'false';
+    const showManifestLink = container.getAttribute('data-manifest-link') !== 'false';
+    const accentColor = container.getAttribute('data-accent-color') || '#1967d2';
 
     const root = ReactDOM.createRoot(container);
     root.render(
@@ -44,6 +48,10 @@ function initFrontend() {
         appearance,
         showZoomControls,
         showFullscreenButton,
+        showSidebar,
+        showWorkspacePanel,
+        showManifestLink,
+        accentColor,
       })
     );
   });
