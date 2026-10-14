@@ -52,6 +52,9 @@ export default function MiradorWrapper({ manifestUrl, width = '100%', height = '
             provider: 'https://iiif.io/api/presentation/3/context.json',
           },
         },
+        osdConfig: {
+          drawer: 'canvas',
+        },
         window: {
           allowClose: false, // always on: closing the only window leaves an empty viewer, not a useful state
           allowFullscreen: showFullscreenButton,
