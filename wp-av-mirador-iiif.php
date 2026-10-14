@@ -3,7 +3,7 @@
  * Plugin Name: Archaeovision Mirador IIIF Viewer
  * Plugin URI: https://github.com/archaeovision/wp-av-mirador-iiif
  * Description: WordPress block plugin for embedding IIIF manifests using the Mirador viewer
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Hembo Pagi
  * Author URI: https://archaeovision.eu
  * License: MIT
