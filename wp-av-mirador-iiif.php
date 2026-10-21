@@ -3,7 +3,7 @@
  * Plugin Name: Archaeovision Mirador IIIF Viewer
  * Plugin URI: https://github.com/archaeovision/wp-av-mirador-iiif
  * Description: WordPress block plugin for embedding IIIF manifests using the Mirador viewer
- * Version: 1.0.6
+ * Version: 1.0.7
  * Requires at least: 6.2
  * Author: Hembo Pagi
  * Author URI: https://archaeovision.eu
@@ -73,15 +73,31 @@ function wp_av_mirador_allowed_manifest_hosts() {
 }
 
 /**
- * Returns the validated manifest URL from ?manifest=, or '' when it is
- * missing, not https, or not on an allowed host.
+ * Base URL that a bare id/slug in ?manifest= is appended to.
+ * Override with the `wp_av_mirador_manifest_base_url` filter.
+ */
+function wp_av_mirador_manifest_base_url() {
+	return trailingslashit( apply_filters( 'wp_av_mirador_manifest_base_url', 'https://api.archaeovision.eu/iiif/manifest/' ) );
+}
+
+/**
+ * Returns the manifest URL requested via ?manifest=, or '' when it is missing
+ * or not acceptable. Accepts either a bare UUID/slug (e.g. "linnahall"),
+ * which is resolved against the manifest base URL, or a full https URL on an
+ * allowed host.
  */
 function wp_av_mirador_requested_manifest_url() {
 	if ( empty( $_GET['manifest'] ) || ! is_string( $_GET['manifest'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return '';
 	}
 
-	$url   = esc_url_raw( wp_unslash( $_GET['manifest'] ), array( 'https' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$value = trim( wp_unslash( $_GET['manifest'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( preg_match( '/^[A-Za-z0-9][A-Za-z0-9_-]{0,199}$/', $value ) ) {
+		return wp_av_mirador_manifest_base_url() . $value;
+	}
+
+	$url   = esc_url_raw( $value, array( 'https' ) );
 	$parts = wp_parse_url( $url );
 
 	if ( empty( $parts['host'] ) || ! empty( $parts['user'] ) || ! empty( $parts['pass'] ) ) {
