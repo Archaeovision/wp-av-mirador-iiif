@@ -3,7 +3,8 @@
  * Plugin Name: Archaeovision Mirador IIIF Viewer
  * Plugin URI: https://github.com/archaeovision/wp-av-mirador-iiif
  * Description: WordPress block plugin for embedding IIIF manifests using the Mirador viewer
- * Version: 1.0.5
+ * Version: 1.0.6
+ * Requires at least: 6.2
  * Author: Hembo Pagi
  * Author URI: https://archaeovision.eu
  * License: MIT
@@ -62,3 +63,56 @@ function wp_av_mirador_load_textdomain() {
 	);
 }
 add_action( 'init', 'wp_av_mirador_load_textdomain' );
+
+/**
+ * Manifest hosts that may be passed in via the ?manifest= URL parameter.
+ * Extend with the `wp_av_mirador_allowed_manifest_hosts` filter.
+ */
+function wp_av_mirador_allowed_manifest_hosts() {
+	return apply_filters( 'wp_av_mirador_allowed_manifest_hosts', array( 'api.archaeovision.eu' ) );
+}
+
+/**
+ * Returns the validated manifest URL from ?manifest=, or '' when it is
+ * missing, not https, or not on an allowed host.
+ */
+function wp_av_mirador_requested_manifest_url() {
+	if ( empty( $_GET['manifest'] ) || ! is_string( $_GET['manifest'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return '';
+	}
+
+	$url   = esc_url_raw( wp_unslash( $_GET['manifest'] ), array( 'https' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$parts = wp_parse_url( $url );
+
+	if ( empty( $parts['host'] ) || ! empty( $parts['user'] ) || ! empty( $parts['pass'] ) ) {
+		return '';
+	}
+	if ( ! in_array( strtolower( $parts['host'] ), array_map( 'strtolower', wp_av_mirador_allowed_manifest_hosts() ), true ) ) {
+		return '';
+	}
+
+	return $url;
+}
+
+/**
+ * Lets ?manifest=<url> override the manifest of every Mirador block on
+ * the page; all other block settings (size, sidebar, colour...) are kept.
+ */
+function wp_av_mirador_override_manifest( $block_content, $block ) {
+	if ( 'wp-av-mirador/iiif-viewer' !== $block['blockName'] || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+		return $block_content;
+	}
+
+	$manifest_url = wp_av_mirador_requested_manifest_url();
+	if ( '' === $manifest_url ) {
+		return $block_content;
+	}
+
+	$tags = new WP_HTML_Tag_Processor( $block_content );
+	if ( $tags->next_tag( array( 'class_name' => 'wp-av-mirador-iiif-viewer' ) ) ) {
+		$tags->set_attribute( 'data-manifest-url', $manifest_url );
+	}
+
+	return $tags->get_updated_html();
+}
+add_filter( 'render_block', 'wp_av_mirador_override_manifest', 10, 2 );
